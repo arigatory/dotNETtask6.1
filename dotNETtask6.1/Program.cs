@@ -24,7 +24,7 @@ namespace dotNETtask6._1
                         Console.Write("Plese enter a command:\n>");
                     else
                         Console.Write("Пожалуйста, введите команду:\n>");
-                    userCommand = Console.ReadLine();
+                    userCommand = Console.ReadLine().Trim();
                     Console.WriteLine();
                     if (english)
                     {
