@@ -11,6 +11,8 @@ namespace dotNETtask6._1
     {
         static void Main(string[] args)
         {
+            EnRuDictionary dictionary = new EnRuDictionary();
+
             string userCommand = "";
             bool userDone = false;
             bool english = false;
@@ -32,6 +34,7 @@ namespace dotNETtask6._1
                         {
                             case "A":
                                 Console.WriteLine("Adding new word to dictionary. Please enter new word:");
+                                
                                 break;
                             case "D":
                                 Console.WriteLine("Please enter a word you want to delete:");
@@ -61,6 +64,7 @@ namespace dotNETtask6._1
                         {
                             case "Д":
                                 Console.WriteLine("Добавляем новое слово. Пожалуйста, введите новое слово:");
+                                AddWord(dictionary);
                                 break;
                             case "У":
                                 Console.WriteLine("Пожалуйста, введите слово, которое хотите удалить:");
@@ -95,7 +99,19 @@ namespace dotNETtask6._1
             Console.ReadLine();
         }
 
-        //add translation
+
+        private static void AddWord(EnRuDictionary dictionary)
+        {
+            Console.WriteLine("Введите слово");
+            string inputWord = Console.ReadLine().Trim().ToLower();
+            Console.WriteLine("Введите перевод для данного слова (можно ввести несколько вариантов через запятую)");
+            string inputTranslation = Console.ReadLine();
+            List<string> translationlList = inputTranslation.ToLower().Split(',').Select(s => s.Trim()).ToList();
+            dictionary.Add(inputWord,translationlList);
+            Console.WriteLine("Слово добавлено!");
+            dictionary.Print();
+        }
+
         private static void ShowInstruction(bool english)
         {
             if (english)
