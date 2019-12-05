@@ -67,7 +67,7 @@ namespace dotNETtask6._1
                             if (english)
                                 Console.WriteLine("Bad data! Try again. Type \"H\" for help");
                             else
-                                Console.WriteLine("Вы ввели что-то не то, попробуйте снова! (\"П\" - помощь)");
+                                Console.WriteLine("Вы ввели что-то не то, попробуйте снова! (\"К\" - команды (список))");
                             break;
                     }
 
