@@ -30,6 +30,10 @@ namespace dotNETtask6._1
             };
         }
 
+        public void Delete(string word)
+        {
+            wordPairs.RemoveWhere(v => v.itemEn == word || v.itemRu == word);
+        }
         public void Add(string word, List<string> translation)
         {
             if (IsRussian(word))
@@ -115,6 +119,7 @@ namespace dotNETtask6._1
                 }
             }
         }
+        
         private class TupleSet<T1,T2>:SortedSet<(T1 itemEn,T2 itemRu)>
         {
             public void Add(T1 itemEn, T2 itemRu)

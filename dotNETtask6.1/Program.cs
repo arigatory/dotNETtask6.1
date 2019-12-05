@@ -22,73 +22,55 @@ namespace dotNETtask6._1
                 ShowInstruction(english);
                 do
                 {
-                    if (english)
-                        Console.Write("Plese enter a command:\n>");
-                    else
-                        Console.Write("Пожалуйста, введите команду:\n>");
-                    userCommand = Console.ReadLine().Trim();
-                    Console.WriteLine();
-                    if (english)
+                    userCommand = AskForCommand(english);
+                    switch (userCommand)
                     {
-                        switch (userCommand.ToUpper())
-                        {
-                            case "A":
-                                Console.WriteLine("Adding new word to dictionary. Please enter new word:");
-                                
-                                break;
-                            case "D":
-                                Console.WriteLine("Please enter a word you want to delete:");
-                                break;
-                            case "S":
-                                Console.WriteLine("Please enter a word to search:");
-                                break;
-                            case "H":
-                                ShowInstruction(english);
-                                break;
-                            case "R":
-                                Console.WriteLine("Меню теперь будет на русском языке");
-                                english = false;
-                                break;
-                            case "Q":
-                                Console.WriteLine("Thank you for using my dictionary, good-bye!");
-                                userDone = true;
-                                break;
-                            default:
+                        case "A":
+                        case "А":
+                        case "Д":
+                            AddWord(dictionary,english);
+                            break;
+                        case "D":
+                        case "У":
+                            DeleteWord(dictionary, english);
+                            break;
+                        case "H":
+                        case "Н":
+                        case "К":
+                        case "K":
+                            ShowInstruction(english);
+                            break;
+                        case "R":
+                            Console.WriteLine("Меню теперь будет на русском языке");
+                            english = false;
+                            ShowInstruction(english);
+                            break;
+                        case "Q":
+                            Console.WriteLine("Thank you for using my dictionary, good-bye!");
+                            userDone = true;
+                            break;
+                        case "П":
+                        case "S":
+                            Search(dictionary, english);
+                            break;
+                        case "E":
+                        case "Е":
+                            Console.WriteLine("Now menu is in English!");
+                            english = true;
+                            ShowInstruction(english);
+                            break;
+                        case "В":
+                            Console.WriteLine("Спасибо за пользование моим словарём. До свидания!");
+                            userDone = true;
+                            break;
+                        default:
+                            if (english)
                                 Console.WriteLine("Bad data! Try again. Type \"H\" for help");
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        switch (userCommand.ToUpper())
-                        {
-                            case "Д":
-                                Console.WriteLine("Добавляем новое слово. Пожалуйста, введите новое слово:");
-                                AddWord(dictionary);
-                                break;
-                            case "У":
-                                Console.WriteLine("Пожалуйста, введите слово, которое хотите удалить:");
-                                break;
-                            case "Н":
-                                Console.WriteLine("Введите слово, которое хотите найти:");
-                                break;
-                            case "А":
-                                Console.WriteLine("Now menu is in English!");
-                                english = true;
-                                break;
-                            case "П":
-                                ShowInstruction(english);
-                                break;
-                            case "В":
-                                Console.WriteLine("Спасибо за пользование моим словарём. До свидания!");
-                                userDone = true;
-                                break;
-                            default:
+                            else
                                 Console.WriteLine("Вы ввели что-то не то, попробуйте снова! (\"П\" - помощь)");
-                                break;
-                        }
+                            break;
                     }
-                    
+
                 } while (!userDone);
             }
             catch (Exception e)
@@ -99,17 +81,113 @@ namespace dotNETtask6._1
             Console.ReadLine();
         }
 
-
-        private static void AddWord(EnRuDictionary dictionary)
+        private static void DeleteWord(EnRuDictionary dictionary, bool english)
         {
-            Console.WriteLine("Введите слово");
-            string inputWord = Console.ReadLine().Trim().ToLower();
-            Console.WriteLine("Введите перевод для данного слова (можно ввести несколько вариантов через запятую)");
+            if (english)
+            {
+                Console.Write("Please enter a word you want to delete\n>");
+            }
+            else
+            {
+                Console.Write("Введите слово для удаления\n>");
+            }
+            string inputWord = Console.ReadLine()?.Trim().ToLower();
+            
+            if (inputWord is null)
+            {
+                Console.WriteLine("Error: bad input! Ошибка ввода!");
+            }
+            else
+            {
+                dictionary.Delete(inputWord);
+                if (english)
+                {
+                    Console.WriteLine($"The word {inputWord} deleted!");
+                }
+                else
+                {
+                    Console.WriteLine($"Слово {inputWord} удалено!");
+                }
+            }
+        }
+
+        private static string AskForCommand(bool english)
+        {
+            Console.WriteLine();
+            if (english)
+                Console.Write("Plese enter a command:\n>");
+            else
+                Console.Write("Пожалуйста, введите команду:\n>");
+            string temp = Console.ReadLine();
+            return temp?.Trim()?.ToUpper() ?? "";
+        }
+
+        private static void Search(EnRuDictionary dictionary, bool english)
+        {
+            if (english)
+            {
+                Console.Write("Enter a word to search:\n>");
+            }
+            else
+            {
+                Console.Write("Введите слово для поиска:\n>");
+            }
+            string input = Console.ReadLine().Trim().ToLower();
+            List<string> translations =  dictionary.GetTranslations(input);
+            if (translations.Count == 0)
+            {
+                if (english)
+                    Console.WriteLine($"No such word in the dictionary:{input}");
+                else
+                    Console.WriteLine($"Слово {input} отсутствует в словаре!");
+            }
+            else
+            {
+                foreach (string s in translations)
+                {
+                    Console.WriteLine(" "+s);
+                }
+            }
+        }
+
+
+        private static void AddWord(EnRuDictionary dictionary, bool english)
+        {
+            if (english)
+            {
+                Console.Write("Please enter a word\n>");
+            }
+            else
+            {
+                Console.Write("Введите слово\n>");
+            }
+            string inputWord = Console.ReadLine()?.Trim().ToLower();
+            if (english)
+            {
+                Console.Write("Please enter a translation for the word. You can use comma for several variants\n>");
+            }
+            else
+            {
+                Console.Write("Введите перевод для данного слова (можно ввести несколько вариантов через запятую)\n>");
+            }
             string inputTranslation = Console.ReadLine();
-            List<string> translationlList = inputTranslation.ToLower().Split(',').Select(s => s.Trim()).ToList();
-            dictionary.Add(inputWord,translationlList);
-            Console.WriteLine("Слово добавлено!");
-            dictionary.Print();
+            List<string> translationlList = inputTranslation?.ToLower().Split(',').Select(s => s.Trim()).ToList();
+            if (inputWord is null || translationlList is null)
+            {
+                Console.WriteLine("Error: bad input! Ошибка ввода!");
+            }
+            else
+            {
+                dictionary.Add(inputWord, translationlList);
+                if (english)
+                {
+                    Console.WriteLine($"The word {inputWord} added!");
+                }
+                else
+                {
+                    Console.WriteLine($"Слово {inputWord} добавлено!");
+                }
+            }
         }
 
         private static void ShowInstruction(bool english)
@@ -127,12 +205,11 @@ namespace dotNETtask6._1
             {
                 Console.WriteLine("Д: Добавить новое слово в словарь.");
                 Console.WriteLine("У: Удалить слово из словаря.");
-                Console.WriteLine("Н: Найти слово в словаре.");
-                Console.WriteLine("А: Translate menu to English");
-                Console.WriteLine("П: Помощь");
+                Console.WriteLine("П: Поиск слова в словаре.");
+                Console.WriteLine("E: Translate menu to English");
+                Console.WriteLine("К: Команды (список)");
                 Console.WriteLine("В: Выйти из программы.");
             }
-            
         }
     }
 }
